@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DFS, BFS, Dijkstra, A*, AEFS 그래프 탐색 알고리즘을 애니메이션으로 배우고, 같은 미로에서 비교 실험할 수 있는 교육·연구용 웹사이트입니다." />
+  <title>GRAPH PATH — 그래프 탐색 알고리즘 비교와 시각화</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <button class="brand" type="button" data-nav="home" aria-label="홈으로 이동">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="1" y="1" width="8" height="8" rx="2" fill="currentColor" />
+            <rect x="13" y="1" width="8" height="8" rx="2" fill="currentColor" opacity="0.35" />
+            <rect x="1" y="13" width="8" height="8" rx="2" fill="currentColor" opacity="0.35" />
+            <rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" />
+            <path d="M9 5h4M5 9v4M17 9v4M9 17h4" stroke="currentColor" stroke-width="1.4" />
+          </svg>
+        </span>
+        <span class="brand-text">GRAPH PATH</span>
+      </button>
+
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <button type="button" class="nav-link is-active" data-nav="home">홈</button>
+        <button type="button" class="nav-link" data-nav="learn">배우기</button>
+        <button type="button" class="nav-link" data-nav="experiment">실험하기</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HOME -->
+    <section id="view-home" class="view is-active" data-view="home">
+      <div class="container">
+        <div class="hero">
+          <p class="eyebrow">영재교육원 창의적 산출물 연구</p>
+          <h1>GRAPH PATH</h1>
+          <p class="hero-lead">그래프 탐색 알고리즘을 직접 보고, 이해하고, 비교해보세요.</p>
+        </div>
+
+        <div class="hero-cards">
+          <article class="choice-card">
+            <div class="choice-icon" aria-hidden="true">📚</div>
+            <h2>알고리즘 배우기</h2>
+            <p>DFS, BFS, Dijkstra, A*, AEFS가 미로를 어떻게 탐색하는지 애니메이션으로 알아봅니다.</p>
+            <button type="button" class="btn btn-primary" data-nav="learn">배우기</button>
+          </article>
+          <article class="choice-card">
+            <div class="choice-icon" aria-hidden="true">🧪</div>
+            <h2>직접 실험하기</h2>
+            <p>같은 미로에서 여러 알고리즘을 실행하고 탐색 과정과 결과를 비교합니다.</p>
+            <button type="button" class="btn btn-primary" data-nav="experiment">실험하기</button>
+          </article>
+        </div>
+
+        <section class="algo-preview" aria-labelledby="algo-preview-title">
+          <div class="section-head">
+            <h2 id="algo-preview-title">탐색 방법</h2>
+            <p>같은 그래프를 다른 규칙으로 걸어가는 알고리즘입니다. AEFS는 탐색 중 얻은 증거의 신뢰도에 따라 전략을 바꿉니다.</p>
+          </div>
+          <div class="algo-grid">
+            <button type="button" class="algo-mini" data-learn-algo="dfs">
+              <span class="algo-tag algo-tag-dfs">DFS</span>
+              <strong>깊이 우선 탐색</strong>
+              <p>일단 한 방향으로 끝까지 가보자!</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="bfs">
+              <span class="algo-tag algo-tag-bfs">BFS</span>
+              <strong>너비 우선 탐색</strong>
+              <p>가까운 곳부터 차례대로 찾아보자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="dijkstra">
+              <span class="algo-tag algo-tag-dijkstra">Dijkstra</span>
+              <strong>다익스트라</strong>
+              <p>지금까지 이동하는 비용이 적은 곳부터 찾아보자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="astar">
+              <span class="algo-tag algo-tag-astar">A*</span>
+              <strong>에이 스타</strong>
+              <p>목표까지 얼마나 가까운지도 생각하면서 찾아보자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="jps4">
+              <span class="algo-tag algo-tag-jps4">JPS4</span>
+              <strong>4방향 점프 지점 탐색</strong>
+              <p>직선 복도는 건너뛰고, 갈림이나 목표가 있는 칸만 열자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="aefs">
+              <span class="algo-tag algo-tag-aefs">AEFS</span>
+              <strong>적응형 증거 탐색</strong>
+              <p>정보가 믿을 만한지 보고, 넓게 볼지 목표로 갈지 바꾸자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="pair">
+              <span class="algo-tag algo-tag-pair">PAIR</span>
+              <strong>양쪽 최단 탐색</strong>
+              <p>비용이 같으면 양쪽에서 만나고, 다르면 실제 비용이 작은 칸부터 간다.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="rim">
+              <span class="algo-tag algo-tag-rim">RIM</span>
+              <strong>가장자리 보폭 탐색</strong>
+              <p>경계에 늘어선 칸을, 붙은 벽의 수만큼 건너뛰어 고르자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="hfgs">
+              <span class="algo-tag algo-tag-hfgs">HFGS</span>
+              <strong>하드웨어 피드백 탐색</strong>
+              <p>지금 이 컴퓨터에서 실제로 빠른 방식을 재며 바꾸자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="sley">
+              <span class="algo-tag algo-tag-sley">SLEY</span>
+              <strong>살대 북 탐색</strong>
+              <p>같은 비용 층의 구슬만 열 막대에 두고, 북이 가리키는 살부터 집자.</p>
+            </button>
+            <button type="button" class="algo-mini" data-learn-algo="bpbfs">
+              <span class="algo-tag algo-tag-bpbfs">BP-BFS</span>
+              <strong>비트 병렬 BFS</strong>
+              <p>큐 대신 비트판에서 한 세대의 이웃을 한꺼번에 켜자.</p>
+            </button>
+          </div>
+        </section>
+
+        <aside class="research-note">
+          <h2>이 사이트의 연구 목적</h2>
+          <p>DFS, BFS, Dijkstra, A*, AEFS를 <strong>동일한 조건의 미로</strong>에서 실행하여 탐색 과정과 실행 시간, 탐색 노드 수, 경로 길이를 비교합니다. AEFS가 항상 더 빠르다고 단정하지 않습니다. 어떤 미로에서 유리한지는 실험으로 확인합니다.</p>
+          <ul class="var-list">
+            <li><span>독립변수</span> 알고리즘, 미로 크기, 미로 구조</li>
+            <li><span>종속변수</span> 실행 시간, 탐색 노드 수, 경로 길이, 휴리스틱 평가 수</li>
+            <li><span>통제 조건</span> 같은 미로 · 같은 시작점 · 같은 목표점</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- LEARN -->
+    <section id="view-learn" class="view" data-view="learn" hidden>
+      <div class="container">
+        <div class="page-intro">
+          <p class="eyebrow">학습 모드</p>
+          <h1>알고리즘 배우기</h1>
+          <p>작은 교육용 미로에서 한 칸씩 탐색이 진행되는 모습을 관찰하세요. 오른쪽 설명은 지금 이 칸을 고른 이유를 알려줍니다.</p>
+        </div>
+
+        <div class="algo-tabs" role="tablist" aria-label="학습할 알고리즘">
+          <button type="button" class="algo-tab is-active" role="tab" aria-selected="true" data-learn-tab="dfs">DFS</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="bfs">BFS</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="dijkstra">Dijkstra</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="astar">A*</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="aefs">AEFS</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="aefsq">AEFS-Q</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="greedy">Greedy</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="hfgs">HFGS</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="rim">RIM</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="pair">PAIR</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="tier">TIER</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="bpbfs">BP-BFS</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="sley">SLEY</button>
+          <button type="button" class="algo-tab" role="tab" aria-selected="false" data-learn-tab="jps4">JPS4</button>
+        </div>
+
+        <p class="analogy" id="learn-analogy">일단 한 방향으로 끝까지 가보자!</p>
+
+        <div class="learn-layout">
+          <div class="panel maze-panel">
+            <div class="panel-label">
+              <span>예제 미로</span>
+              <span class="muted" id="learn-maze-hint">그래프: 칸 = 정점, 인접한 칸 = 간선</span>
+            </div>
+            <canvas id="learn-canvas" width="640" height="480" role="img" aria-label="학습용 미로 애니메이션"></canvas>
+            <ul class="legend" aria-label="미로 색상 범례">
+              <li><span class="swatch swatch-start"></span>시작</li>
+              <li><span class="swatch swatch-end"></span>목표</li>
+              <li><span class="swatch swatch-current"></span>현재 탐색</li>
+              <li><span class="swatch swatch-visited"></span>방문 완료</li>
+              <li><span class="swatch swatch-frontier"></span>탐색 후보</li>
+              <li><span class="swatch swatch-path"></span>최종 경로</li>
+              <li><span class="swatch swatch-wall"></span>벽</li>
+              <li><span class="swatch swatch-weight"></span>높은 비용</li>
+            </ul>
+          </div>
+
+          <aside class="panel explain-panel">
+            <div class="panel-label">현재 상황 설명</div>
+            <div class="algo-heading">
+              <span class="algo-tag" id="learn-algo-tag">DFS</span>
+              <h2 id="learn-algo-name">깊이 우선 탐색</h2>
+            </div>
+            <p class="explain-event" id="learn-event">준비</p>
+            <p class="explain-reason" id="learn-reason" aria-live="polite">재생을 누르면 시작점에서 탐색을 시작합니다. 한 단계씩 보면 알고리즘이 칸을 고르는 순서가 더 잘 보입니다.</p>
+
+            <div class="score-board" id="learn-scores" hidden>
+              <div class="score-item">
+                <span class="score-key">g(n)</span>
+                <strong id="score-g">—</strong>
+                <em>지금까지 실제로 이동한 비용</em>
+              </div>
+              <div class="score-item">
+                <span class="score-key">h(n)</span>
+                <strong id="score-h">—</strong>
+                <em>목표까지 남은 거리의 예상값</em>
+              </div>
+              <div class="score-item">
+                <span class="score-key">f(n)</span>
+                <strong id="score-f">—</strong>
+                <em>g + h, 다음에 볼 칸을 고르는 점수</em>
+              </div>
+            </div>
+
+            <div class="confidence-board" id="learn-confidence" hidden>
+              <div class="score-item">
+                <span class="score-key">C</span>
+                <strong id="score-c">—</strong>
+                <em>목표 방향 정보를 얼마나 믿을 수 있는지 (0=의심, 1=신뢰)</em>
+                <div class="meter" aria-hidden="true"><div class="meter-fill" id="score-c-fill"></div></div>
+              </div>
+              <p class="strategy-label" id="learn-strategy">전략: 준비</p>
+            </div>
+
+            <div class="why-box">
+              <button type="button" class="btn btn-ghost" id="btn-why">왜?</button>
+              <div class="why-detail" id="learn-why" hidden>
+                아직 탐색이 시작되지 않았습니다. 한 단계를 진행한 뒤 다시 눌러 보세요.
+              </div>
+            </div>
+
+            <dl class="stat-inline">
+              <div><dt>방문</dt><dd id="learn-visited-count">0</dd></div>
+              <div><dt>후보</dt><dd id="learn-frontier-count">0</dd></div>
+              <div><dt>단계</dt><dd id="learn-step-label">0 / 0</dd></div>
+            </dl>
+          </aside>
+        </div>
+
+        <div class="controls-bar">
+          <div class="control-buttons">
+            <button type="button" class="btn btn-primary" id="btn-play">자동 재생</button>
+            <button type="button" class="btn" id="btn-pause">일시정지</button>
+            <button type="button" class="btn" id="btn-step">한 단계씩 보기</button>
+            <button type="button" class="btn" id="btn-reset">처음으로</button>
+          </div>
+          <label class="speed-control">
+            <span>느리게</span>
+            <input type="range" id="learn-speed" min="0" max="100" value="55" aria-label="재생 속도" />
+            <span>빠르게</span>
+          </label>
+          <p class="progress-label" id="learn-progress">Step 0 / 0</p>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="learn-progress-fill"></div>
+        </div>
+
+        <section class="complete-card" id="learn-complete" hidden>
+          <h2>탐색 완료!</h2>
+          <p id="learn-complete-text">목표까지 가는 경로를 찾았습니다.</p>
+          <ul class="complete-stats">
+            <li>확장한 노드 수 <strong id="stat-visited">0</strong> <small id="stat-visited-unit"></small></li>
+            <li>최종 경로 길이 <strong id="stat-path">0</strong></li>
+            <li>총 단계 수 <strong id="stat-steps">0</strong></li>
+            <li>경로 유효성 <strong id="stat-validity">—</strong></li>
+            <li>최단 보장 <strong id="stat-guarantee">—</strong></li>
+            <li>이번 실행 최단 일치 <strong id="stat-optimal">—</strong></li>
+          </ul>
+        </section>
+
+        <section class="quiz-card" id="learn-quiz" hidden>
+          <h2>미니 퀴즈</h2>
+          <p class="quiz-question" id="quiz-question"></p>
+          <div class="quiz-options" id="quiz-options"></div>
+          <p class="quiz-feedback" id="quiz-feedback" hidden></p>
+        </section>
+      </div>
+    </section>
+
+    <!-- EXPERIMENT -->
+    <section id="view-experiment" class="view" data-view="experiment" hidden>
+      <div class="container">
+        <div class="page-intro">
+          <p class="eyebrow">실험 모드</p>
+          <h1>직접 실험하기</h1>
+          <p>체크한 알고리즘만 모아 통계를 냅니다. 한 미로 안에서는 모두 같은 미로를 쓰고, 서로 다른 미로를 여러 개 돌릴 수도 있습니다.</p>
+        </div>
+
+        <div class="experiment-layout">
+          <div class="panel maze-panel">
+            <div class="panel-label">
+              <span>미로 편집기</span>
+              <span class="muted" id="exp-maze-size">21 × 21</span>
+            </div>
+            <canvas id="experiment-canvas" width="640" height="640" role="img" aria-label="실험용 미로 편집기"></canvas>
+            <ul class="legend" aria-label="미로 색상 범례">
+              <li><span class="swatch swatch-start"></span>시작</li>
+              <li><span class="swatch swatch-end"></span>목표</li>
+              <li><span class="swatch swatch-wall"></span>벽</li>
+              <li><span class="swatch swatch-empty"></span>이동 가능</li>
+              <li><span class="swatch swatch-weight"></span>높은 비용</li>
+              <li><span class="swatch swatch-path"></span>선택한 경로</li>
+            </ul>
+            <div class="editor-tools" role="toolbar" aria-label="미로 편집 도구">
+              <button type="button" class="tool-btn is-active" data-tool="wall">🧱 벽 그리기</button>
+              <button type="button" class="tool-btn" data-tool="erase">🧽 지우기</button>
+              <button type="button" class="tool-btn" data-tool="start">🔵 시작점</button>
+              <button type="button" class="tool-btn" data-tool="end">🔴 목표점</button>
+              <button type="button" class="tool-btn" data-tool="weight">🟨 높은 비용</button>
+            </div>
+            <div class="editor-actions">
+              <button type="button" class="btn" id="btn-maze-clear">미로 초기화</button>
+              <button type="button" class="btn" id="btn-maze-random">랜덤 생성</button>
+              <button type="button" class="btn" id="btn-maze-save">이 미로 저장</button>
+            </div>
+          </div>
+
+          <aside class="panel settings-panel">
+            <div class="panel-label">실험 설정</div>
+
+            <fieldset class="field">
+              <legend>알고리즘</legend>
+              <p class="field-hint">통계에 넣을 알고리즘만 체크하세요. 한 미로에서는 체크한 알고리즘이 모두 같은 미로를 사용합니다.</p>
+              <label class="check"><input type="checkbox" name="algo" value="dfs" checked /> DFS</label>
+              <label class="check"><input type="checkbox" name="algo" value="bfs" checked /> BFS</label>
+              <label class="check"><input type="checkbox" name="algo" value="dijkstra" checked /> Dijkstra</label>
+              <label class="check"><input type="checkbox" name="algo" value="astar" checked /> A*</label>
+              <label class="check"><input type="checkbox" name="algo" value="aefs" checked /> AEFS</label>
+              <label class="check"><input type="checkbox" name="algo" value="aefsq" /> AEFS-Q</label>
+              <label class="check"><input type="checkbox" name="algo" value="greedy" /> Greedy</label>
+              <label class="check"><input type="checkbox" name="algo" value="bibfs" /> Bi-BFS</label>
+              <label class="check"><input type="checkbox" name="algo" value="rim" checked /> RIM</label>
+              <label class="check"><input type="checkbox" name="algo" value="pair" checked /> PAIR</label>
+              <label class="check"><input type="checkbox" name="algo" value="tier" checked /> TIER</label>
+              <label class="check"><input type="checkbox" name="algo" value="bpbfs" checked /> BP-BFS</label>
+              <label class="check"><input type="checkbox" name="algo" value="sley" checked /> SLEY</label>
+              <label class="check"><input type="checkbox" name="algo" value="jps4" checked /> JPS4</label>
+              <label class="check"><input type="checkbox" name="algo" value="hfgs" checked /> HFGS</label>
+              <label class="check"><input type="checkbox" name="algo" value="hfgsnp" /> HFGS-no-probe</label>
+              <label class="check"><input type="checkbox" name="algo" value="hfgsrt" /> HFGS-runtime</label>
+              <label class="check"><input type="checkbox" name="algo" value="hfgsse" /> HFGS-search</label>
+              <label class="check"><input type="checkbox" name="algo" value="hfgss" /> HFGS-safe (별도 모드)</label>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend>미로 크기</legend>
+              <div class="size-row">
+                <button type="button" class="chip" data-size="small">작음</button>
+                <button type="button" class="chip is-active" data-size="medium">중간</button>
+                <button type="button" class="chip" data-size="large">큼</button>
+                <button type="button" class="chip" data-size="huge">아주 큼</button>
+                <button type="button" class="chip" data-size="vast">거대</button>
+                <button type="button" class="chip" data-size="giga">100억 (가상)</button>
+                <button type="button" class="chip" data-size="custom">사용자 지정</button>
+              </div>
+              <div class="custom-size" id="custom-size" hidden>
+                <label>행 <input type="number" id="custom-rows" min="5" max="10000000000" step="1" value="21" /></label>
+                <label>열 <input type="number" id="custom-cols" min="5" max="10000000000" step="1" value="21" /></label>
+                <button type="button" class="btn btn-small" id="btn-apply-size">적용</button>
+                <p class="field-hint">100억 버튼은 칸을 10²⁰개 만들지 않고도 그 크기 미로를 보여 주기 위한 가상 모드입니다. 통계 내기를 누르면 미로 자체의 유일 경로 길이를 계산합니다. BFS/PAIR/TIER 같은 칸 솔버 비교는 401×401 이하에서 하세요.</p>
+              </div>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend>미로</legend>
+              <label class="select-label">생성 방식
+                <select id="maze-gen-type">
+                  <option value="multi">여러 경로가 있는 랜덤 미로</option>
+                  <option value="single">한 줄기 랜덤 미로</option>
+                </select>
+              </label>
+              <label class="select-label">저장된 미로 불러오기
+                <select id="saved-maze-select">
+                  <option value="">선택하세요</option>
+                </select>
+              </label>
+              <button type="button" class="btn btn-small" id="btn-load-maze">불러오기</button>
+              <button type="button" class="btn btn-small btn-danger-ghost" id="btn-delete-maze">선택한 미로 삭제</button>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend>통계 설정</legend>
+              <label class="slider-field">
+                <span>한 미로에서 반복 <strong id="repeat-value">5회</strong></span>
+                <input type="range" id="slider-repeats" min="1" max="50" value="5" aria-label="한 미로에서 반복 횟수" />
+              </label>
+              <label class="slider-field">
+                <span>서로 다른 미로 수 <strong id="maze-count-value">1개</strong></span>
+                <input type="range" id="slider-maze-count" min="1" max="120" value="1" aria-label="서로 다른 미로 개수" />
+              </label>
+              <p class="field-hint" id="batch-summary">총 실행: 알고리즘 5 × 미로 1 × 반복 5 = 25회</p>
+              <p class="field-hint">미로가 2개 이상이면 첫 번째는 지금 편집 중인 미로, 나머지는 같은 크기의 새 랜덤 미로입니다.</p>
+            </fieldset>
+
+            <button type="button" class="btn btn-primary btn-block" id="btn-run-experiment">통계 내기</button>
+            <p class="run-status" id="run-status" aria-live="polite"></p>
+          </aside>
+        </div>
+
+        <section class="results-section" id="results-section" hidden>
+          <div class="section-head">
+            <h2>실험 결과</h2>
+            <p id="results-caption">아래 값은 방금 실행한 실제 측정값입니다.</p>
+            <p class="field-hint" id="result-metric-note"></p>
+            <ul id="result-warnings" class="var-list" hidden></ul>
+          </div>
+
+          <div class="table-wrap">
+            <table class="result-table" id="result-table">
+              <thead>
+                <tr id="result-table-head-row"></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="path-preview-row">
+            <label>경로 미리보기
+              <select id="path-preview-select">
+                <option value="">알고리즘을 선택하면 경로를 미로에 표시합니다</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="chart-grid">
+            <div class="chart-card">
+              <h3>실행 시간 비교</h3>
+              <canvas id="chart-time" aria-label="실행 시간 막대 그래프"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>탐색 노드 수 비교</h3>
+              <canvas id="chart-visited" aria-label="탐색 노드 수 막대 그래프"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>경로 길이 비교</h3>
+              <canvas id="chart-path" aria-label="경로 길이 막대 그래프"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>휴리스틱 평가 수 비교</h3>
+              <canvas id="chart-heuristic" aria-label="휴리스틱 평가 수 막대 그래프"></canvas>
+            </div>
+          </div>
+          <p class="field-hint" id="energy-note">브라우저는 실제 전력(에너지)을 측정할 수 없습니다. 에너지 칸은 비워 두고, 실행 시간과 노드 확장 수를 비용의 대리 지표로 봅니다.</p>
+
+          <div class="result-actions">
+            <button type="button" class="btn btn-primary" id="btn-save-result">실험 결과 저장</button>
+            <button type="button" class="btn" id="btn-download-csv">CSV 다운로드</button>
+          </div>
+        </section>
+
+        <section class="history-section">
+          <div class="section-head">
+            <h2>이전 실험 결과</h2>
+            <p>이 브라우저의 LocalStorage에 저장된 기록입니다.</p>
+          </div>
+          <div class="history-list" id="history-list">
+            <p class="empty-history">아직 저장된 실험이 없습니다.</p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>GRAPH PATH · 그래프 탐색 알고리즘 비교와 시각화</p>
+      <p class="muted">정적 웹사이트 · 모든 계산은 브라우저에서 실행됩니다 · 결과는 실제 측정값만 표시합니다</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
